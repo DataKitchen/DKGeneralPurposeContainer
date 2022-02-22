@@ -33,7 +33,6 @@ WORKDIR /dk
 # Copy gpc stuff
 COPY ./requirements-ubuntu.txt /dk/requirements.txt
 COPY ./requirements-common.txt /dk/requirements-common.txt
-COPY ./src /dk/lib/gpc
 COPY ./README.md                        /dk/README.md
 COPY ./icon.svg                         /dk/icon.svg
 
@@ -44,6 +43,7 @@ RUN rm -f /dk/requirements*.txt
 
 # copy analytic container python files
 COPY --from=source /dk/lib              /dk/lib
+COPY ./src /dk/lib/gpc
 
 ENV PYTHONPATH=/dk/lib
 
