@@ -1,5 +1,5 @@
 
-TAG:=latest
+TAG?=latest
 IMAGE_NAME:=dk_general_purpose_container:$(TAG)
 
 all: build
