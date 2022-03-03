@@ -6,7 +6,7 @@ DEFAULT_IMAGE_NAME:=$(BASE_IMAGE_NAME):ubuntu20-$(TAG)
 VERSIONED_IMAGE_NAME:=$(BASE_IMAGE_NAME):ubuntu20-$(VERSION)
 
 
-all: build
+all: build test
 
 build:
 	docker build -f ./Dockerfile -t $(DEFAULT_IMAGE_NAME) .
