@@ -1,0 +1,14 @@
+{
+  "dependencies": [],
+  "apt-dependencies": [],
+  "keys": {
+    "key1": {
+      "script": "test1.py",
+      "parameters": {
+        "message": "hello world"
+      },
+      "environment": {},
+      "export": []
+    }
+  }
+}
