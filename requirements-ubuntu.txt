@@ -1,4 +1,0 @@
---requirement requirements-common.txt
-awscli>=1.18.137
-azure-cli>=2.11.1
-cryptography>=3.4.5
