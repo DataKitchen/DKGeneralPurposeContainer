@@ -10,11 +10,14 @@ all: build_ubuntu20_base test
 
 build_ubuntu20_base:
 	docker build -f ./DockerfileUbuntu20Base -t $(DEFAULT_IMAGE_NAME) .
-	docker tag $(DEFAULT_IMAGE_NAME) $(VERSIONED_IMAGE_NAME)
 
 test:
 	IMAGE=$(DEFAULT_IMAGE_NAME) make -C tests test
 
-push: test
+
+push-default: test
 	docker push $(DEFAULT_IMAGE_NAME)
+
+push: test
+	docker tag $(DEFAULT_IMAGE_NAME) $(VERSIONED_IMAGE_NAME)
 	docker push $(VERSIONED_IMAGE_NAME)
