@@ -2,8 +2,8 @@
 VERSION?=latest
 IMAGE_NAME:=datakitchenprod/dk_general_purpose_container
 TMP_IMAGE_NAME:=$(IMAGE_NAME):ubuntu20-base-dev
-BASE_IMAGE_NAME:=$(IMAGE_NAME):ubuntu20-base-$(TAG)
-FULL_IMAGE_NAME=$(IMAGE_NAME):ubuntu20-$(TAG)
+BASE_IMAGE_NAME:=$(IMAGE_NAME):ubuntu20-base-$(VERSION)
+FULL_IMAGE_NAME=$(IMAGE_NAME):ubuntu20-$(VERSION)
 
 
 all: unittest build_ubuntu20_base imagetest build_ubuntu20
