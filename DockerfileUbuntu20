@@ -1,0 +1,39 @@
+#@IgnoreInspection BashAddShebang
+############################################################
+# DKGeneralPurposeContainer
+# Dockerfile to build Analytic Container Template
+############################################################
+
+ARG BASE_IMAGE
+
+FROM ${BASE_IMAGE}
+
+MAINTAINER Carlos Descalzi <carlos@datakitchen.io>
+
+ENV LC_CTYPE=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
+# Install basic applications
+RUN apt-get update && apt-get install --yes \
+    build-essential \
+    curl \
+    dialog \
+    freetds-bin \
+    freetds-dev \
+    libncurses5-dev \
+    libpq-dev \
+    net-tools \
+    python-distribute\
+    python3-dev \
+    python3-pip \
+    tar \
+    gpgv \
+    jq 
+
+# Install python dependencies
+COPY reqs/requirements-ubuntu.txt /dk/requirements.txt
+COPY reqs/requirements-common.txt /dk/requirements-common.txt
+RUN pip3 install --upgrade --ignore-installed --requirement /dk/requirements.txt
+RUN rm /dk/requirements.txt /dk/requirements-common.txt
+

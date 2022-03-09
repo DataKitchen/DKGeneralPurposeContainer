@@ -1,23 +1,32 @@
 
-TAG?=latest
-VERSION?=1.0.0
-BASE_IMAGE_NAME:=datakitchenprod/dk_general_purpose_container
-DEFAULT_IMAGE_NAME:=$(BASE_IMAGE_NAME):ubuntu20-base-$(TAG)
-VERSIONED_IMAGE_NAME:=$(BASE_IMAGE_NAME):ubuntu20-base-$(VERSION)
+VERSION?=latest
+IMAGE_NAME:=datakitchenprod/dk_general_purpose_container
+TMP_IMAGE_NAME:=$(IMAGE_NAME):ubuntu20-base-dev
+BASE_IMAGE_NAME:=$(IMAGE_NAME):ubuntu20-base-$(TAG)
+FULL_IMAGE_NAME=$(IMAGE_NAME):ubuntu20-$(TAG)
 
 
-all: build_ubuntu20_base test
+all: unittest build_ubuntu20_base imagetest build_ubuntu20
 
 build_ubuntu20_base:
-	docker build -f ./DockerfileUbuntu20Base -t $(DEFAULT_IMAGE_NAME) .
+	docker build -f ./DockerfileUbuntu20Base -t $(TMP_IMAGE_NAME) .
 
-test:
-	IMAGE=$(DEFAULT_IMAGE_NAME) make -C tests test
+build_ubuntu20:
+	docker tag $(TMP_IMAGE_NAME) $(BASE_IMAGE_NAME)
+	docker build --build-arg BASE_IMAGE=$(BASE_IMAGE_NAME) -f ./DockerfileUbuntu20 -t $(FULL_IMAGE_NAME) .
+
+test: unittest imagetest
+
+imagetest:
+	IMAGE=$(TMP_IMAGE_NAME) make -C tests test
+
+unittest:
+	nosetests unittests
 
 
-push-default: test
-	docker push $(DEFAULT_IMAGE_NAME)
+push-test: 
+	docker push $(TMP_IMAGE_NAME)
 
-push: test
-	docker tag $(DEFAULT_IMAGE_NAME) $(VERSIONED_IMAGE_NAME)
-	docker push $(VERSIONED_IMAGE_NAME)
+push: 
+	docker push $(BASE_IMAGE_NAME)
+	docker push $(FULL_IMAGE_NAME)
