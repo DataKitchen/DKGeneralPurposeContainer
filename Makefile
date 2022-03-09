@@ -24,7 +24,7 @@ unittest:
 	nosetests unittests
 
 
-push-test: 
+push_test: 
 	docker push $(TMP_IMAGE_NAME)
 
 push: 
