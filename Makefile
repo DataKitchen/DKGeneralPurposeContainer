@@ -21,7 +21,7 @@ imagetest:
 	IMAGE=$(TMP_IMAGE_NAME) make -C tests test
 
 unittest:
-	nosetests unittests
+	python3 -m nose unittests
 
 
 push_test: 
