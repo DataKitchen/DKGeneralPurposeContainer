@@ -8,7 +8,9 @@
         "message": "hello world"
       },
       "environment": {},
-      "export": []
+      "export": [
+        "test_var"
+      ]
     }
   }
 }
