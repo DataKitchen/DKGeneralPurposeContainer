@@ -4,5 +4,5 @@ test:
 	docker run \
 		-v $(PWD)/tests/docker-share:/dk/docker-share \
 		$(IMAGE) 
-	nosetests $(PWD)/tests
+	python3 -m nose $(PWD)/tests
 
