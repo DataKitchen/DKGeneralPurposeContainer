@@ -18,7 +18,7 @@ build_ubuntu20:
 test: unittest imagetest
 
 imagetest_base:
-	IMAGE=$(TMP_IMAGE_NAME) make -C tests test
+	IMAGE=$(BASE_TMP_IMAGE_NAME) make -C tests test
 
 imagetest:
 	IMAGE=$(TMP_IMAGE_NAME) make -C tests test
