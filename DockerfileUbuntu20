@@ -4,11 +4,9 @@
 # Dockerfile to build Analytic Container Template
 ############################################################
 
-ARG BASE_IMAGE
+FROM datakitchenprod/dk_general_purpose_container:ubuntu20-base-latest
 
-FROM ${BASE_IMAGE}
-
-MAINTAINER Carlos Descalzi <carlos@datakitchen.io>
+MAINTAINER DataKitchen Implementation <implementation@datakitchen.io>
 
 ENV LC_CTYPE=C.UTF-8
 ENV LC_ALL=C.UTF-8
