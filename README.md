@@ -2,13 +2,12 @@
 
 ## Description
 This project is used to build General Purpose Container (GPC) images for use in DataKitchen Platform Docker container 
-nodes. These images in conjunction with the DataKitchen Platform will run shell scripts, python3 code, and Jupyter 
-notebooks. It facilitates the automation of virtually any current or future tool from within the DataKitchen Platform.
+nodes. These images in, conjunction with the DataKitchen Platform, run shell scripts, python3 code, and Jupyter 
+notebooks. This facilitates the automation of virtually any current or future tool from within the DataKitchen Platform.
 
 ## Images
-Both Ubuntu based and Amazon Linux 2 based images are provided. The Amazon Linux 2 based image is available using the 
-tag `amzlx`. The major difference is the Amazon Linux 2 image does not run as the `root` user and instead runs as the 
-`datakitchen` user with UID/GID 1006/1007.
+Currently, only Ubuntu based images are provided. However, other base images could be used as well. For instance, an
+Amazon Linux 2 base image was built and tested and could be made available if desired.
 
 ## Repository
 https://github.com/DataKitchen/DKGeneralPurposeContainer
@@ -32,17 +31,20 @@ example:
 ```
 make build DOCKERFILE=DockerfileUbuntu20 VERSION=0.0.1
 ```
-\* By default, the images are built with the --no-cache option (i.e. `NO_CACHE=--no-cache`). To disable this option, add 
-`NO_CACHE=` to the make command above.
+\* By default, the images are built with the `--no-cache` option (i.e. `NO_CACHE=--no-cache`). To disable this option, 
+add `NO_CACHE=` to the make command above.
 
 ## Deploy
 By default, the Makefile deploys the image to DataKitchen's private repository on Dockerhub in the _datakitchenprod_ 
-namespace and _dk_general_purpose_container_ repository. Users may provide alternative `NAMESPACE` and `REPOSITORY`
-variable assignments via the provided Makefile commands if they so choose. However, users
-must update the Makefile to push to a different registry other than Dockerhub. Currently, the versioned tag is either 
-`ubuntu20-base-<VERSION>` for DockerfileUbuntu20Base and `ubuntu20-<VERSION>` for DockerfileUbuntu20. The full image 
-paths for the two images are _datakitchenprod/dk_general_purpose_container:ubuntu20-base-<VERSION>_ and 
-_datakitchenprod/dk_general_purpose_container:ubuntu20-<VERSION>_.
+namespace and _dk_general_purpose_container_ repository. To customize the destination of the images, users may provide 
+`REGISTRY_LOCATION`, `NAMESPACE`, and `REPOSITORY` variable assignments when issuing a Makefile command. For 
+instance, to push to a registry other than Dockerhub, set `REGISTRY_LOCATION` with the address and port of the registry,
+making sure to include the trailing slash (e.g. my.registry.address:port/). Currently, the versioned tag is either 
+`ubuntu20-base-<VERSION>` for DockerfileUbuntu20Base and `ubuntu20-<VERSION>` for DockerfileUbuntu20. The tags 
+for the two images are _datakitchenprod/dk_general_purpose_container:ubuntu20-base-<VERSION>_ and 
+_datakitchenprod/dk_general_purpose_container:ubuntu20-<VERSION>_ (i.e. `REGISTRY_LOCATION` is empty by default). If
+`REGISTRY_LOCATION` was set to `my.registry.address:port/`, the tag would be:
+_my.registry.address:port/datakitchenprod/dk_general_purpose_container:ubuntu20-base-<VERSION>_)
 
 ```bash
 make push DOCKERFILE=<dockerfile> VERSION=<semantic_version>
@@ -58,69 +60,25 @@ make push DOCKERFILE=<dockerfile> VERSION=<semantic_version>
 ```
 
 ## Testing
+Three make targets exist to run tests: unittest, imagetest, and ordertest. The unittest target runs locally (i.e. not
+in a Docker container) to test the Analytic Container source code. By the way, this code lives in the src directory and
+is executed via the ENTRYPOINT to container. Therefore, if this code is changed, ensure the unittests pass. The 
+imagetest target runs a test inside a Docker container, similar to how container nodes are executed in the DataKitchen
+Platform. This test will run the local image specified by the DOCKERFILE and VERSION variables. Therefore, you can build
+the image locally and test it before pushing to Dockerhub. Finally, the ordertest target runs an Order in the 
+DataKitchen platform using the new image specified by the DOCKERFILE and VERSION variables. However, the image must be
+pushed and available on Dockerhub so the platform can pull it and run it.
 
-
-## Container details
-* Image uses Python3 exclusively.
-* Supports shell scripts, Python3 scripts, and Jupyter Notebooks.
-* Supports a subset of methods from the Python3 logger. See section below.
-* Includes several pre-installed apt-get and Python tools. See section below.
-* Sets a standard structure for passing parameters and variables, installing dependencies, retrieving files, and logging without requiring significant custom code.
-
-### Logger methods supported
-* Printing to logs using LOGGER.info()
-* **LOGGER.setLevel()**, where the default level is warning. This method requires import logging in script to change the default level.
-
-  Example:
-``` bash
-        LOGGER.setLevel(logging.DEBUG)
-```
-* Alternate logging levels.
-``` bash
-        LOGGER.debug()
-        LOGGER.warning()
-        LOGGER.error()
-        LOGGER.critical()
-```
-
-### Pre-installed packages
-
-#### Standard Ubuntu Image
-| apt-get tools   	|                 	|                   	|             	|
-|:-----------------	|-----------------	|-------------------	|-------------	|
-| build-essential 	| freetds-dev     	| nano              	| python3-pip 	|
-| curl            	| git             	| net-tools         	| rsync       	|
-| dialog          	| gpgv            	| python-distribute 	| tar         	|
-| emacs           	| libncurses5-dev 	| python3           	| wget         	|
-| freetds-bin     	| libpq-dev       	| python3-dev       	| jq          	|
-
-#### Amazon Linux 2 Image
-| yum tools             |                       |                       |                    |
-|:----------------------|-----------------------|-----------------------|--------------------|
-| epel                  | emacs                 | freetds-devel         | nano               |
-| sudo                  | git                   | gnupg2                | tar                |
-| shadow-utils          | net-tools             | rsync                 | python3            |
-| curl                  | make                  | wget                  | python3-pip        |
-| dialog                | freetds               | jq                    | python3-setuptools |
-| ncurses-devel         | libxslt-devel         | postgresql-devel      | python3-devel      |
-| gcc                   | gcc-c++               |                       |                    |
-
-#### All Images
-| python packages                   |                                       |                               |
-|:----------------------------------|---------------------------------------|-------------------------------|
-| awscli>=1.18.137\*                | google-cloud-storage>=1.31.0          | scikit-learn>=0.23.2          |
-| azure-cli>=2.11.1\*               | jupyter>=1.0.0                        | scipy>=1.5.2                  |
-| beautifulsoup4>=4.9.1             | oauth2client>=4.1.3                   | setuptools>=50.3.0            |
-| boto>=2.49.0                      | openpyxl>=3.0.5                       | simple-salesforce>=1.10.1     |
-| boto3>=1.14.60                    | matplotlib>=3.3.1                     | six>=1.15.0                   |
-| cryptography>=3.4.5\*             | numpy>=1.19.2                         | sqlalchemy==1.3.18            |
-| Cython>=0.28.5                    | pandas>=1.1.2                         | xlrd>=1.2.0                   |
-| DKUtils>=1.10.0                   | paramiko>=2.7.2                       | tableauserverclient>=0.13     |
-| google-api-python-client>=1.12.1  | psycopg2>=2.8.6 --no-binary psycopg2  |                               |
-| google-cloud>=0.34.0              | pyyaml>=5.4.1                         |                               |
-| google-cloud-bigquery>=1.27.2     | requests>=2.24.0                      |                               |
-
-\*Not installed in Amazon Linux 2 image
+## CI/CD
+The Makefile targets are intended to facilitate a CI/CD pipeline for deploying new GPC images. Internally, DataKitchen's
+CI/CD pipeline does the following:
+* Run unit tests (make unittest)
+* Build a new versioned image (make build DOCKERFILE=$DOCKERFILE VERSION=$VERSION)
+* Run image tests (make imagetest DOCKERFILE=$DOCKERFILE VERSION=$VERSION)
+* Push the versioned image to Dockerhub (make push DOCKERFILE=$DOCKERFILE VERSION=$VERSION)
+* Run order tests (make ordertest VERSION=$VERSION DOCKERFILE=$DOCKERFILE USERNAME=<> PASSWORD=<> KITCHEN=<> RECIPE=<> VARIATION=<>)
+* Tag the versioned image as latest (make tag_latest DOCKERFILE=$DOCKERFILE VERSION=$VERSION)
+* Push the latest image (make push_latest DOCKERFILE=$DOCKERFILE VERSION=$VERSION)
 
 
 ## Ubuntu20 Changelog

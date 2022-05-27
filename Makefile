@@ -2,7 +2,7 @@ PATH:=bin/:${PATH}
 .PHONY: \
     help \
     scan_secrets \
-    test unittest imagetest ordertest \
+    unittest imagetest ordertest \
     build \
     tag_latest \
     pull \
@@ -16,9 +16,11 @@ MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 UNITTESTS_DIR := $(MAKEFILE_DIR)/tests
 
+# To push to a registry other than Dockerhub, provide location with trailing slash (e.g. my.registry.address:port/)
+REGISTRY_LOCATION :=
 NAMESPACE := datakitchenprod
 REPOSITORY := dk_general_purpose_container
-IMAGE_PREFIX := $(NAMESPACE)/$(REPOSITORY)
+IMAGE_PREFIX := $(REGISTRY_LOCATION)$(NAMESPACE)/$(REPOSITORY)
 NO_CACHE := --no-cache
 
 ifeq ($(DOCKERFILE), DockerfileUbuntu20Base)
@@ -55,7 +57,6 @@ help:
 	@echo "    scan_secrets      Scan source code for sensitive information"
 	@echo
 	@echo "Testing:"
-	@echo "    test              Run all tests"
 	@echo "    unittest          Run unit tests natively"
 	@echo "    imagetest         Run unit tests in a Docker container based on DOCKERFILE and VERSION override "
 	@echo "                      variables. For example, \"make imagetest VERSION=0.0.1 DOCKERFILE=DockerfileUbuntu20\""
@@ -111,8 +112,6 @@ scan_secrets:
 
 
 # --- Testing ---
-
-test: unittest imagetest ordertest
 
 unittest:
 	python3 -m nose unittests
