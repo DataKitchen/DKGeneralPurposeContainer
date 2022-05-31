@@ -83,6 +83,9 @@ CI/CD pipeline does the following:
 
 ## Ubuntu20 Changelog
 
+### 0.0.2 - 2022-05-31
+* Added git, libxml2-dev, libxslt1-dev, nano, rsync, and wget packages to image.
+
 ### 0.0.1 - 2022-05-26
 * Initial release
 
