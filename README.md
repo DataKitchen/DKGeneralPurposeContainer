@@ -86,6 +86,7 @@ CI/CD pipeline does the following:
 ### 0.0.2 - 2022-05-31
 * Added git, libxml2-dev, libxslt1-dev, nano, rsync, and wget packages to image.
 * Update psycopg2 to v2.9.3 and remove --no-binary option (see https://www.psycopg.org/docs/install.html#psycopg-vs-psycopg-binary)
+* Add traitlets<=5.2.0 to fix dependency issue
 
 ### 0.0.1 - 2022-05-26
 * Initial release
