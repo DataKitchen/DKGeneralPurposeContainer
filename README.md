@@ -10,7 +10,7 @@ Currently, only Ubuntu based images are provided. However, other base images cou
 Amazon Linux 2 base image was built and tested and could be made available if desired.
 
 ## Repository
-https://github.com/DataKitchen/DKGeneralPurposeContainer
+[DKGeneralPurposeContainer](https://github.com/DataKitchen/DKGeneralPurposeContainer)
 
 ## Build
 As of this writing, there are 2 Dockerfiles available for building the GPC. The first is DockerfileUbuntu20Base which
@@ -84,9 +84,15 @@ CI/CD pipeline does the following:
 ## Ubuntu20 Changelog
 
 ### 0.0.2 - 2022-05-31
-* Added git, libxml2-dev, libxslt1-dev, nano, rsync, and wget packages to image.
-* Update psycopg2 to v2.9.3 and remove --no-binary option (see https://www.psycopg.org/docs/install.html#psycopg-vs-psycopg-binary)
-* Add traitlets<=5.2.0 to fix dependency issue
+* Added APT packages
+  * git
+  * libxml2-dev
+  * libxslt1-dev
+  * nano
+  * rsync
+  * wget
+* Update psycopg2 to v2.9.3 and remove `--no-binary` option (see [Change in binary packages between Psycopg 2.7 and 2.8](https://www.psycopg.org/docs/install.html#change-in-binary-packages-between-psycopg-2-7-and-2-8))
+* Added traitlets<=5.2.0 to requirements to resolve AssertionError with latest version 5.2.2
 
 ### 0.0.1 - 2022-05-26
 * Initial release
