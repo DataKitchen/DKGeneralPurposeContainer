@@ -83,6 +83,10 @@ CI/CD pipeline does the following:
 
 ## Ubuntu20 Changelog
 
+### 0.0.3 - 2022-07-13
+* Update DKUtils to v2.5.0
+
+
 ### 0.0.2 - 2022-05-31
 * Added APT packages
   * git
